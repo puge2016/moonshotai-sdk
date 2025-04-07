@@ -301,6 +301,20 @@ class MoonshotAI
     }
 
     /**
+     * 清理历史记录
+     */
+    public function cleanHistory()
+    {
+        $messages = $this->history ; 
+        $this->history = [] ; 
+        foreach ($messages as $message) {
+            if (isset($message['role']) && $message['role'] === 'system') {
+                $this->history[] = $message ; 
+            }
+        }
+    }
+
+    /**
      * 清理Moonshot API上的文件
      * @return bool 是否清理成功
      * @throws MoonshotException
@@ -2142,7 +2156,7 @@ GET https://api.moonshot.cn/v1/caching/refs/tags/{{your_tag_name}}
                 $cacheTagJson = $this->retrieveCacheTag($cacheTag);
                 $cacheTagInfo = json_decode($cacheTagJson, true);
                 if (isset($cacheTagInfo['cache_id']) && !empty($cacheTagInfo['cache_id'])) {
-                    $this->log(['使用已存在的缓存标签', $cacheTag, $cacheTagInfo['cache_id']], 2);
+                    // $this->log(['使用已存在的缓存标签', $cacheTag, $cacheTagInfo['cache_id']], 2);
                     $cacheExists = true;
                 }
             } catch (Exception $e) {
